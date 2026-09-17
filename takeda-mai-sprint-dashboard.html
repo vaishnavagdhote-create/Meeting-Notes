@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Takeda mAI Access Pricing — Sprint Review Readiness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #EAEEEF;
+    --surface: #FFFFFF;
+    --surface-2: #F4F7F7;
+    --ink: #16242B;
+    --muted: #5A6A70;
+    --faint: #86959B;
+    --line: #D5DDDE;
+    --line-strong: #C2CCCD;
+    --primary: #0C5150;
+    --primary-2: #0A4241;
+    --primary-tint: #E1EDEC;
+    --amber: #A9741B;
+    --amber-tint: #F6ECD8;
+    --green: #26714E;
+    --green-tint: #DBEFE4;
+    --grey: #6B7A80;
+    --grey-tint: #E7ECED;
+    --shadow: 0 1px 0 rgba(22,36,43,.04), 0 8px 24px -18px rgba(12,81,80,.35);
+    --radius: 4px;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --bg: #0D1517;
+      --surface: #131F22;
+      --surface-2: #17272A;
+      --ink: #E7EDEC;
+      --muted: #9DAAAE;
+      --faint: #708086;
+      --line: #24363A;
+      --line-strong: #2F464B;
+      --primary: #43B0AC;
+      --primary-2: #58C2BD;
+      --primary-tint: #14312F;
+      --amber: #D6A44E;
+      --amber-tint: #2E2413;
+      --green: #5FBF8E;
+      --green-tint: #14291F;
+      --grey: #93A2A7;
+      --grey-tint: #1E2E32;
+      --shadow: 0 1px 0 rgba(0,0,0,.2), 0 10px 30px -20px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0D1517;
+    --surface: #131F22;
+    --surface-2: #17272A;
+    --ink: #E7EDEC;
+    --muted: #9DAAAE;
+    --faint: #708086;
+    --line: #24363A;
+    --line-strong: #2F464B;
+    --primary: #43B0AC;
+    --primary-2: #58C2BD;
+    --primary-tint: #14312F;
+    --amber: #D6A44E;
+    --amber-tint: #2E2413;
+    --green: #5FBF8E;
+    --green-tint: #14291F;
+    --grey: #93A2A7;
+    --grey-tint: #1E2E32;
+    --shadow: 0 1px 0 rgba(0,0,0,.2), 0 10px 30px -20px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 72px; }
+
+  /* ---------- Header / hero ---------- */
+  header { padding: 34px 0 8px; }
+  .kicker {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px;
+    font-size: 13px; color: var(--muted); font-weight: 500; margin-bottom: 16px;
+  }
+  .kicker b { color: var(--ink); font-weight: 600; letter-spacing: .01em; }
+  .kicker .sep { width: 4px; height: 4px; border-radius: 50%; background: var(--line-strong); display: inline-block; }
+  .kicker .live { color: var(--primary); font-weight: 600; }
+
+  h1 {
+    font-family: "Archivo", sans-serif;
+    font-weight: 800;
+    font-size: clamp(28px, 4.6vw, 44px);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+    max-width: 18ch;
+  }
+  .lede { color: var(--muted); font-size: 16px; max-width: 62ch; margin: 0 0 26px; }
+
+  .hero-panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 24px 24px;
+    display: grid;
+    grid-template-columns: minmax(0,1fr);
+    gap: 20px;
+  }
+  @media (min-width: 720px) { .hero-panel { grid-template-columns: 220px 1fr; align-items: center; } }
+
+  .readiness-figure { border-right: none; }
+  @media (min-width: 720px) { .readiness-figure { border-right: 1px solid var(--line); padding-right: 22px; } }
+  .big-pct {
+    font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 58px; line-height: 1; letter-spacing: -0.03em; color: var(--primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .big-pct span { font-size: 26px; vertical-align: 4px; margin-left: 2px; color: var(--faint); }
+  .readiness-label { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .counts { display: flex; gap: 18px; margin-top: 14px; font-size: 13px; color: var(--muted); }
+  .counts b { font-family: "IBM Plex Mono", monospace; color: var(--ink); font-weight: 500; }
+
+  /* segmented readiness bar */
+  .segbar-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .segbar-head h2 { font-family: "Archivo"; font-size: 15px; font-weight: 700; margin: 0; letter-spacing: -0.01em; }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); }
+  .legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; margin-right: 5px; vertical-align: 0; }
+  .i-done { background: var(--green); }
+  .i-prog { background: var(--amber); }
+  .i-plan { background: var(--grey); }
+
+  .segrows { display: grid; gap: 12px; }
+  .segrow { display: grid; grid-template-columns: 1fr; gap: 6px; }
+  .segrow-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .segrow-name { font-size: 13.5px; font-weight: 600; }
+  .segrow-meta { font-size: 12px; color: var(--faint); font-family: "IBM Plex Mono"; white-space: nowrap; }
+  .track { height: 8px; border-radius: 6px; background: var(--grey-tint); overflow: hidden; display: flex; }
+  .track > span { height: 100%; transition: width .45s cubic-bezier(.2,.7,.3,1); }
+  .track .s-done { background: var(--green); }
+  .track .s-prog { background: var(--amber); }
+
+  /* ---------- Workstream sections ---------- */
+  .section { margin-top: 30px; }
+  .section-head {
+    display: flex; align-items: flex-start; gap: 14px; margin-bottom: 14px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--line-strong);
+  }
+  .accent { width: 6px; align-self: stretch; min-height: 34px; border-radius: 3px; background: var(--primary); flex: none; }
+  .section-titles h2 {
+    font-family: "Archivo"; font-weight: 700; font-size: clamp(19px,2.6vw,23px);
+    letter-spacing: -0.02em; margin: 0 0 3px;
+  }
+  .section-titles p { margin: 0; color: var(--muted); font-size: 14px; max-width: 66ch; }
+  .section-progress { margin-left: auto; text-align: right; flex: none; padding-left: 12px; }
+  .section-progress .n { font-family: "IBM Plex Mono"; font-size: 13px; color: var(--muted); }
+
+  /* item list */
+  .items { display: grid; gap: 10px; }
+  .item {
+    appearance: none; text-align: left; width: 100%; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--line); border-left-width: 3px;
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 14px 16px; display: flex; gap: 14px; align-items: flex-start;
+    color: inherit; font: inherit; transition: border-color .15s, transform .06s;
+  }
+  .item:hover { border-color: var(--line-strong); }
+  .item:active { transform: translateY(1px); }
+  .item:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .item[data-status="done"] { border-left-color: var(--green); }
+  .item[data-status="prog"] { border-left-color: var(--amber); }
+  .item[data-status="plan"] { border-left-color: var(--grey); }
+
+  .marker {
+    flex: none; width: 20px; height: 20px; border-radius: 50%; margin-top: 1px;
+    border: 2px solid var(--line-strong); display: grid; place-items: center;
+    font-size: 12px; color: #fff; transition: background .2s, border-color .2s;
+  }
+  .item[data-status="done"] .marker { background: var(--green); border-color: var(--green); }
+  .item[data-status="prog"] .marker { background: var(--amber); border-color: var(--amber); }
+  .item[data-status="plan"] .marker { background: transparent; }
+  .marker svg { width: 12px; height: 12px; display: none; }
+  .item[data-status="done"] .marker svg { display: block; }
+  .item[data-status="prog"] .marker::after { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+
+  .item-body { flex: 1; min-width: 0; }
+  .item-title { font-weight: 600; font-size: 15px; line-height: 1.35; }
+  .item-note { color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+  .item[data-status="done"] .item-title { color: var(--muted); }
+  .chip {
+    flex: none; align-self: center; font-size: 11.5px; font-weight: 600; letter-spacing: .02em;
+    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .chip[data-s="plan"] { background: var(--grey-tint); color: var(--grey); }
+  .chip[data-s="prog"] { background: var(--amber-tint); color: var(--amber); }
+  .chip[data-s="done"] { background: var(--green-tint); color: var(--green); }
+
+  /* demo tiles */
+  .tiles { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 560px) { .tiles { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 860px) { .tiles { grid-template-columns: 1fr 1fr 1fr; } }
+  .tile {
+    appearance: none; text-align: left; cursor: pointer; color: inherit; font: inherit;
+    background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--grey);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 15px;
+    display: flex; flex-direction: column; gap: 8px; min-height: 92px; transition: border-color .15s, transform .06s;
+  }
+  .tile:hover { border-color: var(--line-strong); }
+  .tile:active { transform: translateY(1px); }
+  .tile:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .tile[data-status="done"] { border-top-color: var(--green); }
+  .tile[data-status="prog"] { border-top-color: var(--amber); }
+  .tile-name { font-weight: 600; font-size: 14.5px; line-height: 1.3; }
+  .tile-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+  .tile-foot .chip { align-self: auto; }
+
+  /* areas / tags */
+  .areas-wrap { margin-top: 14px; }
+  .areas-label { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    appearance: none; cursor: pointer; font: inherit; color: inherit;
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+    padding: 7px 13px 7px 11px; font-size: 13.5px; font-weight: 500; transition: border-color .15s;
+  }
+  .tag:hover { border-color: var(--line-strong); }
+  .tag:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .tag .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--grey); flex: none; }
+  .tag[data-status="prog"] .dot { background: var(--amber); }
+  .tag[data-status="done"] .dot { background: var(--green); }
+  .tag[data-status="done"] { color: var(--muted); }
+
+  /* toolbar */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 26px 0 4px; }
+  .hint { font-size: 13px; color: var(--faint); margin-right: auto; }
+  .btn {
+    appearance: none; cursor: pointer; font: inherit; font-size: 13px; font-weight: 500;
+    background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong);
+    border-radius: 20px; padding: 7px 14px; transition: border-color .15s, background .15s;
+  }
+  .btn:hover { border-color: var(--primary); }
+  .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+  footer {
+    margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--line);
+    font-size: 12.5px; color: var(--faint); display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: space-between;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">
+      <b>Takeda</b><span class="sep"></span>mAI Access Pricing<span class="sep"></span>
+      <span>Sprint review &amp; workshop</span><span class="sep"></span>
+      <span class="live" id="updated">Live tracker</span>
+    </div>
+    <h1>Sprint review &amp; workshop readiness</h1>
+    <p class="lede">Everything raised in the Takeda meeting, organised into four workstreams for the sprint review, demo, and Business Prioritization deck. Click any item to move it through Planned → In progress → Done — your progress is saved in this browser.</p>
+
+    <div class="hero-panel">
+      <div class="readiness-figure">
+        <div class="big-pct"><span id="doneCount">0</span>/<span id="totalCount">0</span></div>
+        <div class="readiness-label">items marked done</div>
+        <div class="counts">
+          <div><b id="wsCount">4</b> workstreams</div>
+          <div><b id="progCount">0</b> in progress</div>
+        </div>
+      </div>
+      <div>
+        <div class="segbar-head">
+          <h2>Readiness by workstream</h2>
+          <div class="legend">
+            <span><i class="i-done"></i>Done</span>
+            <span><i class="i-prog"></i>In&nbsp;progress</span>
+            <span><i class="i-plan"></i>Planned</span>
+          </div>
+        </div>
+        <div class="segrows" id="segrows"></div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span class="hint">Tip: click an item once to start it, again to complete it.</span>
+      <button class="btn" id="resetBtn" type="button">Reset all</button>
+      <button class="btn" id="themeBtn" type="button">Toggle theme</button>
+    </div>
+  </header>
+
+  <!-- 1. Architecture & Scalability -->
+  <section class="section" data-ws="arch">
+    <div class="section-head">
+      <span class="accent"></span>
+      <div class="section-titles">
+        <h2>Architecture &amp; scalability assessment</h2>
+        <p>How the new architecture affects what exists today, and what it takes to scale and migrate onto it.</p>
+      </div>
+      <div class="section-progress"><span class="n" data-count="arch">0/0</span></div>
+    </div>
+    <div class="items" id="items-arch"></div>
+  </section>
+
+  <!-- 2. Supporting Content -->
+  <section class="section" data-ws="support">
+    <div class="section-head">
+      <span class="accent"></span>
+      <div class="section-titles">
+        <h2>Supporting content</h2>
+        <p>Inputs that back up the sprint review where they add value.</p>
+      </div>
+      <div class="section-progress"><span class="n" data-count="support">0/0</span></div>
+    </div>
+    <div class="items" id="items-support"></div>
+  </section>
+
+  <!-- 3. Sprint Demo -->
+  <section class="section" data-ws="demo">
+    <div class="section-head">
+      <span class="accent"></span>
+      <div class="section-titles">
+        <h2>Sprint demo — must cover</h2>
+        <p>Topics the presentation and working demo need to walk through for the review.</p>
+      </div>
+      <div class="section-progress"><span class="n" data-count="demo">0/0</span></div>
+    </div>
+    <div class="tiles" id="tiles-demo"></div>
+  </section>
+
+  <!-- 4. Business Prioritization Workshop Deck -->
+  <section class="section" data-ws="bpw">
+    <div class="section-head">
+      <span class="accent"></span>
+      <div class="section-titles">
+        <h2>Business Prioritization workshop deck</h2>
+        <p>Capture the workshop outcome, and cover each product area as it applies.</p>
+      </div>
+      <div class="section-progress"><span class="n" data-count="bpw">0/0</span></div>
+    </div>
+    <div class="items" id="items-bpw"></div>
+    <div class="areas-wrap">
+      <div class="areas-label">Areas to include, where applicable:</div>
+      <div class="tags" id="tags-bpw"></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Source: Takeda meeting notes · Agilisium — mAI Access Pricing</span>
+  </footer>
+</div>
+
+<script>
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+  var STORE_KEY = "takeda-mai-sprint-v1";
+  var THEME_KEY = "takeda-mai-theme";
+  var ORDER = ["plan","prog","done"];
+  var LABELS = { plan:"Planned", prog:"In progress", done:"Done" };
+
+  var data = {
+    arch: {
+      kind: "items",
+      items: [
+        { id:"arch1", title:"Impact of the new architecture on existing dashboards", note:"Assess what changes for dashboards already in production." },
+        { id:"arch2", title:"Scale the existing dashboard under the new architecture", note:"Show how the current dashboard scales on the new setup." },
+        { id:"arch3", title:"Update the migration & infrastructure checklists", note:"Include or refresh both checklists as part of the assessment." },
+        { id:"arch4", title:"Incorporate the assessment with Arpit", note:"Fold in the discussion and findings from Arpit." }
+      ]
+    },
+    support: {
+      kind: "items",
+      items: [
+        { id:"sup1", title:"Market Landscape fields / inputs from IG", note:"Pull the landscape fields and inputs from IG." },
+        { id:"sup2", title:"HTA & Reimbursement — status and updates", note:"Include where relevant to the sprint review." }
+      ]
+    },
+    demo: {
+      kind: "tiles",
+      items: [
+        { id:"demo1", title:"mAI Acceleration" },
+        { id:"demo2", title:"Workshop output for the week" },
+        { id:"demo3", title:"Key milestones" },
+        { id:"demo4", title:"Dependencies" },
+        { id:"demo5", title:"Overall roadmap" },
+        { id:"demo6", title:"Solution dependencies" },
+        { id:"demo7", title:"Working demo of the solution" }
+      ]
+    },
+    bpw: {
+      kind: "items",
+      items: [
+        { id:"bpw1", title:"Capture the Business Prioritization workshop outcome", note:"The deck should reflect what the workshop decided." }
+      ],
+      tags: [
+        { id:"area1", title:"Data Definition / Home screens" },
+        { id:"area2", title:"Admin" },
+        { id:"area3", title:"Brand-to-Molecule mapping" },
+        { id:"area4", title:"Pricing / COT" }
+      ]
+    }
+  };
+
+  var WS_NAMES = { arch:"Architecture & scalability", support:"Supporting content", demo:"Sprint demo", bpw:"Business Prioritization" };
+  var WS_KEYS = ["arch","support","demo","bpw"];
+
+  var state = {};
+  function allIds() {
+    var ids = [];
+    WS_KEYS.forEach(function(k){
+      (data[k].items||[]).forEach(function(it){ ids.push(it.id); });
+      (data[k].tags||[]).forEach(function(it){ ids.push(it.id); });
+    });
+    return ids;
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw) state = JSON.parse(raw) || {};
+    } catch (e) { state = {}; }
+    allIds().forEach(function(id){ if (!state[id]) state[id] = "plan"; });
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function chip(status) {
+    return '<span class="chip" data-s="'+status+'">'+LABELS[status]+'</span>';
+  }
+  function markerHTML() {
+    return '<span class="marker" aria-hidden="true">'+CHECK+'</span>';
+  }
+
+  function renderItems(wsKey) {
+    var host = document.getElementById("items-"+wsKey);
+    if (!host) return;
+    host.innerHTML = "";
+    data[wsKey].items.forEach(function(it){
+      var s = state[it.id];
+      var b = document.createElement("button");
+      b.className = "item";
+      b.type = "button";
+      b.dataset.status = s;
+      b.dataset.id = it.id;
+      b.setAttribute("aria-label", it.title + " — status: " + LABELS[s] + ". Click to change.");
+      b.innerHTML = markerHTML() +
+        '<span class="item-body"><span class="item-title">'+it.title+'</span>'+
+        (it.note ? '<span class="item-note">'+it.note+'</span>' : '')+'</span>'+
+        chip(s);
+      host.appendChild(b);
+    });
+  }
+
+  function renderTiles(wsKey) {
+    var host = document.getElementById("tiles-"+wsKey);
+    if (!host) return;
+    host.innerHTML = "";
+    data[wsKey].items.forEach(function(it){
+      var s = state[it.id];
+      var b = document.createElement("button");
+      b.className = "tile";
+      b.type = "button";
+      b.dataset.status = s;
+      b.dataset.id = it.id;
+      b.setAttribute("aria-label", it.title + " — status: " + LABELS[s] + ". Click to change.");
+      b.innerHTML = '<span class="tile-name">'+it.title+'</span>'+
+        '<span class="tile-foot">'+chip(s)+markerHTML()+'</span>';
+      host.appendChild(b);
+    });
+  }
+
+  function renderTags(wsKey) {
+    var host = document.getElementById("tags-"+wsKey);
+    if (!host || !data[wsKey].tags) return;
+    host.innerHTML = "";
+    data[wsKey].tags.forEach(function(it){
+      var s = state[it.id];
+      var b = document.createElement("button");
+      b.className = "tag";
+      b.type = "button";
+      b.dataset.status = s;
+      b.dataset.id = it.id;
+      b.setAttribute("aria-label", it.title + " — status: " + LABELS[s] + ". Click to change.");
+      b.innerHTML = '<span class="dot" aria-hidden="true"></span>'+it.title;
+      host.appendChild(b);
+    });
+  }
+
+  function itemsOf(wsKey) {
+    return (data[wsKey].items||[]).concat(data[wsKey].tags||[]);
+  }
+
+  function updateSummary() {
+    var total = 0, done = 0, prog = 0;
+    var seg = [];
+    WS_KEYS.forEach(function(k){
+      var list = itemsOf(k), d=0, p=0;
+      list.forEach(function(it){
+        total++;
+        if (state[it.id]==="done"){ done++; d++; }
+        else if (state[it.id]==="prog"){ prog++; p++; }
+      });
+      seg.push({ key:k, name:WS_NAMES[k], total:list.length, done:d, prog:p });
+      var el = document.querySelector('.n[data-count="'+k+'"]');
+      if (el) el.textContent = d + "/" + list.length;
+    });
+    document.getElementById("doneCount").textContent = done;
+    document.getElementById("totalCount").textContent = total;
+    document.getElementById("progCount").textContent = prog;
+
+    var rows = document.getElementById("segrows");
+    rows.innerHTML = "";
+    seg.forEach(function(s){
+      var donePct = s.total ? (s.done/s.total*100) : 0;
+      var progPct = s.total ? (s.prog/s.total*100) : 0;
+      var row = document.createElement("div");
+      row.className = "segrow";
+      row.innerHTML =
+        '<div class="segrow-top"><span class="segrow-name">'+s.name+'</span>'+
+        '<span class="segrow-meta">'+s.done+'/'+s.total+'</span></div>'+
+        '<div class="track"><span class="s-done" style="width:'+donePct+'%"></span>'+
+        '<span class="s-prog" style="width:'+progPct+'%"></span></div>';
+      rows.appendChild(row);
+    });
+  }
+
+  function cycle(id) {
+    var cur = state[id] || "plan";
+    var next = ORDER[(ORDER.indexOf(cur)+1) % ORDER.length];
+    state[id] = next;
+    save();
+    var el = document.querySelector('[data-id="'+id+'"]');
+    if (el) {
+      el.dataset.status = next;
+      var c = el.querySelector(".chip");
+      if (c) { c.dataset.s = next; c.textContent = LABELS[next]; }
+    }
+    updateSummary();
+  }
+
+  function renderAll() {
+    renderItems("arch"); renderItems("support"); renderItems("bpw");
+    renderTiles("demo"); renderTags("bpw");
+    updateSummary();
+  }
+
+  document.addEventListener("click", function(e){
+    var t = e.target.closest("[data-id]");
+    if (t) cycle(t.dataset.id);
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    allIds().forEach(function(id){ state[id] = "plan"; });
+    save(); renderAll();
+  });
+
+  // theme
+  (function initTheme(){
+    var saved;
+    try { saved = localStorage.getItem(THEME_KEY); } catch(e){}
+    if (saved === "dark" || saved === "light") document.documentElement.setAttribute("data-theme", saved);
+    document.getElementById("themeBtn").addEventListener("click", function(){
+      var cur = document.documentElement.getAttribute("data-theme");
+      var isDark = cur ? cur === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      var next = isDark ? "light" : "dark";
+      document.documentElement.setAttribute("data-theme", next);
+      try { localStorage.setItem(THEME_KEY, next); } catch(e){}
+    });
+  })();
+
+  load();
+  renderAll();
+</script>
+</body>
+</html>
